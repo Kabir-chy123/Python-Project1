@@ -1,5 +1,3 @@
-import json
-import os
 import mysql.connector
 
 def connect_db():
@@ -125,51 +123,7 @@ def fetch_runs(limit=5):
     cursor.close()
     conn.close()
     return runs
-# ============================================================
-    #  LOCAL SAVE SYSTEM – For Resume Game Feature
-    # ============================================================
 
-SAVE_FILE = "savegame.json"  # File name for storing progress
-
-def save_progress(player, current_zone):
-        """
-        Save the current player state and progress to a JSON file.
-        This allows the player to resume later even if the program closes.
-        """
-        try:
-            data = {
-                "player": player,
-                "zone": current_zone
-            }
-            with open(SAVE_FILE, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4)
-            print("💾 Progress saved successfully!")
-        except Exception as e:
-            print(f"⚠️ Error saving progress: {e}")
-
-def load_progress():
-        """
-        Load player state and zone from the local save file.
-        Returns (player, zone) or (None, None) if not found.
-        """
-        if not os.path.exists(SAVE_FILE):
-            print("⚠️ No saved game found.")
-            return None, None
-
-        try:
-            with open(SAVE_FILE, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            print("🔁 Save file loaded — resuming your journey.")
-            return data.get("player"), data.get("zone")
-        except Exception as e:
-            print(f"⚠️ Error loading save file: {e}")
-            return None, None
-
-def delete_save():
-        """Optional: delete save file after finishing the game."""
-        if os.path.exists(SAVE_FILE):
-            os.remove(SAVE_FILE)
-            print("🧹 Old save data cleared.")
 
 
 
