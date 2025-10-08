@@ -570,12 +570,12 @@ def run_game(player_name):
         if "Aurora" in zone_name:
             # Compass Ending (if Storm Compass is in inventory)
             if "Storm Compass" in player["inventory"]:
-                return check_ending(player, "COMPASS"), player_name, player
+                return check_ending(player, "COMPASS")
 
             # Rebellion Ending (player choice)
             rebellion_choice = input("\n🚀 You see Aurora Beacon shining ahead... Do you want to turn away and forge your own path? (y/n): ").lower()
             if rebellion_choice == "y":
-                return check_ending(player, "REBELLION"), player_name, player
+                return check_ending(player, "REBELLION")
 
         # Apply inventory effects on crash chance
         crash_chance = weather["crash_chance"]
@@ -592,26 +592,26 @@ def run_game(player_name):
         # Crash roll
         if random.random() < crash_chance:
             print("⚡ The storm overwhelms you!")
-            result = check_ending(player, "STORM"), player_name, player
+            result = check_ending(player, "STORM")
             return result, player_name, player
 
         # Phantom airports effects
         if "effect" in chosen_airport:
             effect = chosen_airport["effect"]
             if effect == "win":
-                result = check_ending(player, "AURORA"),
+                result = check_ending(player, "AURORA")
                 return result, player_name, player
             elif effect == "trap":
-                result = check_ending(player, "LOOP"),
+                result = check_ending(player, "LOOP")
                 return result, player_name, player
             elif effect == "stranded":
-                result = check_ending(player, "DEC"),
+                result = check_ending(player, "DEC")
                 return result, player_name, player
             elif effect == "crash":
-                result = check_ending(player, "HAUNT"),
+                result = check_ending(player, "HAUNT")
                 return result, player_name, player
             elif effect == "death":
-                result = check_ending(player, "STORM"),
+                result = check_ending(player, "STORM")
                 return result, player_name, player
 
         # Crisis zone → survivor mission
@@ -657,6 +657,7 @@ if __name__ == "__main__":
         print("🏆 Your run has been saved to the Hall of Fame!")
     except Exception as e:
         print("⚠️ Could not save run:", e)
+
 
 
 
