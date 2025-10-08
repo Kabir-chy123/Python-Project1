@@ -1,4 +1,4 @@
-from database import fetch_runs, save_run, save_progress, load_progress
+from database import fetch_runs, save_run
 import random
 import sys
 import mysql.connector
@@ -320,12 +320,12 @@ def main_menu():
 
         print("""
 1. 🛫 Start New Mission
-2. 🔁 Resume Last Flight
-3. 🏆 View Hall of Fame
-4. 📘 Instructions
-5. ❌ Exit
+2. 🏆 View Hall of Fame
+3. 📘 Instructions
+4. ❌ Exit
 """)
-        choice = input("Select an option (1–5): ").strip()
+
+        choice = input("Select an option (1–4): ").strip()
 
         # --- Start New Game ---
         if choice == "1":
@@ -334,23 +334,8 @@ def main_menu():
             time.sleep(1)
             return "start"
 
-        # --- Resume Saved Game ---
-        elif choice == "2":
-            os.system("cls" if os.name == "nt" else "clear")
-            divider()
-            type_text("🔁 RESUMING SAVED MISSION...", 0.02)
-            divider()
-            player, zone = load_progress()
-            if player and zone:
-                type_text(f"🧭 Save found! Resuming from {zone} Zone...", 0.03)
-                time.sleep(1)
-                return ("resume", player, zone)
-            else:
-                type_text("⚠️ No saved flight data detected. Start a new mission first.", 0.02)
-                input("\nPress ENTER to return to menu...")
-
         # --- View Hall of Fame ---
-        elif choice == "3":
+        elif choice == "2":
             os.system("cls" if os.name == "nt" else "clear")
             divider()
             type_text("🏆 HALL OF FAME – Past Pilots", 0.02)
@@ -368,7 +353,7 @@ def main_menu():
             input("\nPress ENTER to return to menu...")
 
         # --- Instructions ---
-        elif choice == "4":
+        elif choice == "3":
             os.system("cls" if os.name == "nt" else "clear")
             divider()
             type_text("📘 FLIGHT AURORA – PILOT BRIEFING", 0.02)
@@ -393,7 +378,7 @@ def main_menu():
             input("Press ENTER to return to main menu...")
 
         # --- Exit ---
-        elif choice == "5":
+        elif choice == "4":
             os.system("cls" if os.name == "nt" else "clear")
             type_text("👋 Shutting down FLIGHT AURORA system...", 0.02)
             time.sleep(1)
@@ -451,24 +436,15 @@ def story_intro():
 
     return player_name
 
-def run_game(player_name, resume=False, start_zone=None):
+def run_game(player_name):
     # === 🏆 Show Hall of Fame ===
     try:
-        past_runs = fetch_runs()
-        print("=== 🏆 HALL OF FAME ===")
-        # 🧭 Load saved progress if resuming
-        if resume:
-            print(f"🔁 Resuming previous mission from {start_zone} Zone...\n")
-            player, _ = load_progress()
-        else:
+            past_runs = fetch_runs()
+            print("=== 🏆 HALL OF FAME ===")
             player = create_player()
-        if past_runs:
-            for run in past_runs:
-                print(f"{run['played_at']} | {run['player_name']} → {run['ending']} "
-                      f"| Survivors: {run['survivors']} | Fuel Left: {run['fuel']}")
-        else:
-            print("No past pilots recorded yet.")
-        print("========================\n")
+
+            if past_runs:
+                ...
     except Exception as e:
         print("⚠️ Could not load Hall of Fame:", e)
 
@@ -495,14 +471,6 @@ def run_game(player_name, resume=False, start_zone=None):
 
     # Progress through zones in order
     for zone_name, data in game_world.items():
-        # --- Resume logic: skip earlier zones ---
-        if resume and start_zone:
-            if zone_name != start_zone:
-                continue  # skip zones before the saved one
-            else:
-                resume = False  # once we hit saved zone, start from here
-        change_zone(player, zone_name.replace(" Zone", ""))
-
         print("\n=====================================")
         print(f"🌍 Entering {zone_name}")
         show_map_progress(zone_name)
@@ -664,12 +632,7 @@ def run_game(player_name, resume=False, start_zone=None):
                     print("✨ You found a Storm Shield! Crash risk reduced.")
             else:
                 print("🛫 You ignore the call. Fuel saved, but survivors left behind.")
-                from database import save_progress
-                save_progress(player, zone_name)
     # If reached here, final ending check
-    # 💾 Auto-save progress at end of each zone
-    save_progress(player, zone_name)
-    print(f"💾 Progress saved! You can resume from {zone_name} next time.")
     result = check_ending(player, "AURORA")
     return result, player_name, player
 
@@ -687,17 +650,10 @@ if __name__ == "__main__":
         player_name = story_intro()
         os.system("cls" if os.name == "nt" else "clear")
         result, _, player = run_game(player_name)
-
-    # 🔁 Resume a Saved Mission
-    elif isinstance(menu_action, tuple) and menu_action[0] == "resume":
-        _, player, zone = menu_action
-        os.system("cls" if os.name == "nt" else "clear")
-        print(f"🧭 Resuming mission from {zone} Zone...")
-        result, _, player = run_game(player["player_name"], resume=True, start_zone=zone)
     # 🏁 Show Final Results
     print(f"\n=== GAME OVER: {result} ===")
     try:
-        save_run(player["player_name"], result, player["survivors"], player["fuel"])
+        save_run(player_name, result, player["survivors"], player["fuel"])
         print("🏆 Your run has been saved to the Hall of Fame!")
     except Exception as e:
         print("⚠️ Could not save run:", e)
