@@ -20,3 +20,6 @@ Through every storm, NOVA guides you. “Fuel levels critical.” “Severe turb
 You can push forward into the unknown… or turn away and carve your own path into the fading sky.
 
 Flight AURORA is not about wealth or glory. It is about survival, trust, and the courage to keep flying when the sky itself is breaking. And beyond the final storm, the Aurora waits.
+
+DataBase
+
