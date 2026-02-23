@@ -1,4 +1,5 @@
 Game Story – Flight AURORA
+
 You are the last pilot in the sky.
 When the world began to fade, it didn’t end with explosions or fire. Airports vanished from radar. Cities blinked out like dying stars. Pilots reported strange lights before their signals dissolved into static. One by one, every aircraft disappeared—every aircraft except yours. Now, you fly alone.
 Your only companion is NOVA, an advanced AI navigator built for long-haul survival missions. Calm, precise, almost human, NOVA monitors your fuel levels, calculates unstable routes, and warns you of storms forming beyond the horizon. Somewhere in the chaos, one signal still burns bright: the Aurora Beacon. It may be the last hope for humanity—or the source of everything that went wrong.
